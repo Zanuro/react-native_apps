@@ -1,4 +1,5 @@
 
+/* Array of locations */
 export const fetchLocationId = async city => {
     const response = await fetch(
         `https://www.metaweather.com/api/location/search/?query=${city}`,
@@ -6,7 +7,7 @@ export const fetchLocationId = async city => {
     const locations = await response.json();
     return locations[0].woeid;
 };
-
+/* Weather details based on where on earth id -- woeid */
 export const fetchWeather = async woeid => {
     const response = await fetch(
         `https://www.metaweather.com/api/location/${woeid}`,
