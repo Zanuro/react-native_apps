@@ -11,7 +11,7 @@ export default class SearchInput extends React.Component {
   }
 
   handleChangeText = text => {
-    this.setState({ text });
+    this.setState({ text : text });
   };
 
   handleSubmitEditing = () => {

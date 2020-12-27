@@ -12,12 +12,19 @@ export const fetchWeather = async woeid => {
     const response = await fetch(
         `https://www.metaweather.com/api/location/${woeid}`,
     );
-    const { title, consolidated_weather } = await response.json();
-    const { weather_state_name, the_temp } = consolidated_weather[0];
-
+    const { title, time, consolidated_weather } = await response.json();
+    const { weather_state_name, the_temp, humidity, min_temp, max_temp } = consolidated_weather[0];
+    var substr = time.substring(
+        time.lastIndexOf("T") + 1,
+        time.lastIndexOf(".")
+    );
     return {
         location: title,
         weather: weather_state_name,
         temperature: the_temp,
+        humidity: humidity,
+        minTemp: min_temp,
+        maxTemp: max_temp,
+        time: substr,
     };
-};
+}; 
