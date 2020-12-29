@@ -1,4 +1,4 @@
-import react from 'react';
+import React from 'react';
 import {StyleSheet, View, Text, TextInput } from 'react-native';
 
 import TimerButton from './TimerButton';
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     textInput: {
         height: 35,
         padding: 8,
-        fontsize: 13,
+        fontSize: 13,
     },
     textInputTitle:{
         fontSize: 15,

@@ -1,4 +1,4 @@
-import react from 'react';
+import React from 'react';
 
 import TimerForm from './TimerForm';
 import Timer from './Timer';
@@ -18,4 +18,5 @@ export default function EditableTimer({
     return (
         <Timer id={id} title={title} project={project} elapsed={elapsed} isRunning={isRunning} />
     );
+
 }
