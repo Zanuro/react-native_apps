@@ -4,6 +4,8 @@ import { StyleSheet, Text, View, ScrollView } from 'react-native';
 
 import {v4 as uuidv4} from 'uuid';
 
+import { newTimer } from './utils/TimerUtils';
+
 import EditableTimer from './components/EditableTimer';
 import ToggleableTimerForm from './components/ToggleableTimerForm';
 
@@ -28,6 +30,90 @@ export default class App extends React.Component {
     ]
   };
 
+
+  componentDidMount(){
+    const TIME_STEP = 1000;
+
+    this.intervals = setInterval(() => {
+      const {timers} = this.state;
+
+      this.setState({
+        timers: timers.map(timer => {
+          const { elapsed, isRunning } = timer;
+
+          return {
+            ...timer,
+            elapsed: isRunning ? elapsed + TIME_STEP : elapsed,
+          };
+        })
+      })
+    }, TIME_STEP);
+  }
+
+  
+  componentWillUnmount(){
+    clearInterval(this.intervals);
+  }
+
+
+  handleCreateFormSubmit = timer => {
+    const { timers } = this.state;
+
+    this.setState({
+      timers: [newTimer(timer), ...timers], /*immutable way to add a new timer using the spread operator */
+    });
+  }
+
+  handleFormSubmit = attrs => {
+
+    const { timers } = this.state;
+
+    this.setState({
+      timers: timers.map(timer => {
+        if(timer.id === attrs.id){
+          const { title, project } = attrs;
+
+          return {
+            ...timer,
+            title,
+            project,
+          };
+        }
+
+        return timer;
+      }),
+    });
+  }
+
+  handleRemoveTimer = timerid => {
+    this.setState({
+      timers: this.state.timers.filter(timer => timer.id !== timerid)
+    });
+  }
+
+  handleTimeChange = timerid => {
+
+    this.setState(prevState => {
+      const { timers } = prevState;
+
+      return {
+        timers: timers.map(timer => {
+          const {id , isRunning } = timer;
+
+          if (id === timerid){
+            return{
+              ...timer,
+              isRunning: !isRunning,
+            }
+          }
+
+          return timer;
+        })
+      }
+    })
+  };
+
+
   render (){
     const { timers } = this.state;
     return (
@@ -36,10 +122,10 @@ export default class App extends React.Component {
           <Text style={styles.title}>Timers</Text>
         </View>
         <ScrollView style={styles.timerList}>
-          <ToggleableTimerForm/>
+          <ToggleableTimerForm onFormSubmit={this.handleCreateFormSubmit}/>
           {timers.map(({ title, project, id, elapsed, isRunning}) => (
             <EditableTimer
-            key={id} id={id} title={title} project={project} elapsed={elapsed} isRunning={isRunning} />
+            key={id} id={id} title={title} project={project} elapsed={elapsed} isRunning={isRunning} onFormSubmit={this.handleFormSubmit} onRemovePress={this.handleRemoveTimer} onStartPress={this.handleTimeChange} onStopPress={this.handleTimeChange}/>
           ))}
         </ScrollView>
       </View>
