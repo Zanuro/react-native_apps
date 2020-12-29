@@ -4,13 +4,26 @@ import {StyleSheet, View, Text } from 'react-native';
 import TimerForm from './TimerForm';
 import TimerButton from './TimerButton';
 
-export default function ToggleableTimerForm({ isOpen }){
+export default class ToggleableTimerForm extends React.Component{
 
-    return (
-        <View style={[styles.container, !isOpen && styles.buttonPadding]}>
-            {isOpen ? <TimerForm /> : <TimerButton title="+" color="black" />}
-        </View>
-    );
+    state = {
+        isOpen: false,
+    };
+
+    handleFormOpen = () => {
+        this.setState({ isOpen: true });
+    }
+
+    render(){
+        const { isOpen } = this.state;
+
+        return (
+            <View style={[styles.container, !isOpen && styles.buttonPadding]}>
+                {isOpen ? <TimerForm /> : <TimerButton title="+" color="black" onPress={this.handleFormOpen} />}
+            </View>
+        );
+    }
+    
 }
 
 

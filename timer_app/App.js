@@ -2,25 +2,49 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
 
-import EditableForm from './components/EditableTimer';
+import {v4 as uuidv4} from 'uuid';
+
+import EditableTimer from './components/EditableTimer';
 import ToggleableTimerForm from './components/ToggleableTimerForm';
 
-export default function App() {
-  return (
-    <View style={styles.appContainer}>
-      <View style={styles.titleCointainer}>
-        <Text style={styles.title}>Timers</Text>
-      </View>
-      <ScrollView style={styles.timerList}>
-        <ToggleableTimerForm isOpen={false} />
-        <EditableForm id="1" title="First task" 
-        project="project 1" elapsed="1000" isRunning/>
+export default class App extends React.Component {
 
-        <EditableForm id="2" title="Second task" 
-        project="project 2" elapsed="1000" editFormOpen/>
-      </ScrollView>
-    </View>
-  );
+  state = {
+    timers: [
+      {
+        title: 'Do thing one',
+        project: 'General',
+        id: uuidv4(),
+        elapsed: 54000,
+        isRunning: true,
+      },
+      {
+        title: 'Do thing two',
+        project: 'General',
+        id: uuidv4(),
+        elapsed: 64321,
+        isRunning: false,
+      },
+    ]
+  };
+
+  render (){
+    const { timers } = this.state;
+    return (
+      <View style={styles.appContainer}>
+        <View style={styles.titleCointainer}>
+          <Text style={styles.title}>Timers</Text>
+        </View>
+        <ScrollView style={styles.timerList}>
+          <ToggleableTimerForm/>
+          {timers.map(({ title, project, id, elapsed, isRunning}) => (
+            <EditableTimer
+            key={id} id={id} title={title} project={project} elapsed={elapsed} isRunning={isRunning} />
+          ))}
+        </ScrollView>
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
