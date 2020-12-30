@@ -6,6 +6,18 @@ import TimerButton from './TimerButton';
 
 export default class Timer extends React.Component{
 
+    static propTypes = {
+        id: PropTypes.string.isRequired,
+        elapsed: PropTypes.number.isRequired,
+        title: PropTypes.string.isRequired,
+        project: PropTypes.string.isRequired,
+        onEditPress: PropTypes.func.isRequired,
+        onRemovePress: PropTypes.func.isRequired,
+        onStartPress: PropTypes.func.isRequired,
+        onStopPress: PropTypes.func.isRequired,
+        isRunning: PropTypes.bool.isRequired,
+    }
+
     handleRemoveForm = () => {
         const { id, onRemovePress} = this.props;
         onRemovePress(id);

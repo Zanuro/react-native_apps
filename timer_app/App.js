@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, KeyboardAvoidingView } from 'react-native';
 
 import {v4 as uuidv4} from 'uuid';
 
@@ -121,6 +121,7 @@ export default class App extends React.Component {
         <View style={styles.titleCointainer}>
           <Text style={styles.title}>Timers</Text>
         </View>
+        <KeyboardAvoidingView behavior="padding" style={styles.timerListContainer}>
         <ScrollView style={styles.timerList}>
           <ToggleableTimerForm onFormSubmit={this.handleCreateFormSubmit}/>
           {timers.map(({ title, project, id, elapsed, isRunning}) => (
@@ -128,6 +129,7 @@ export default class App extends React.Component {
             key={id} id={id} title={title} project={project} elapsed={elapsed} isRunning={isRunning} onFormSubmit={this.handleFormSubmit} onRemovePress={this.handleRemoveTimer} onStartPress={this.handleTimeChange} onStopPress={this.handleTimeChange}/>
           ))}
         </ScrollView>
+        </KeyboardAvoidingView>
       </View>
     );
   }
@@ -151,4 +153,7 @@ const styles = StyleSheet.create({
   timerList:{
     paddingBottom: 12,
   },
+  timerListContainer:{
+    flex: 1,
+  }
 });

@@ -5,6 +5,18 @@ import Timer from './Timer';
 
 
 export default class EditableTimer extends React.Component{
+
+    static propTypes = {
+        id: PropTypes.string.isRequired,
+        title: PropTypes.string.isRequired,
+        project: PropTypes.string.isRequired,
+        elapsed: PropTypes.number.isRequired,
+        isRunning: PropTypes.bool.isRequired,
+        onRemovePress: PropTypes.func.isRequired,
+        onStartPress: PropTypes.func.isRequired,
+        onStopPress: PropTypes.func.isRequired,
+        onFormSubmit: PropTypes.func.isRequired,
+    }
    
     state = {
         editFormOpen: false,
