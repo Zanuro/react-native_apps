@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, KeyboardAvoidingView, Button, Alert, Vibration } from 'react-native';
 
 import {v4 as uuidv4} from 'uuid';
 
@@ -12,22 +12,7 @@ import ToggleableTimerForm from './components/ToggleableTimerForm';
 export default class App extends React.Component {
 
   state = {
-    timers: [
-      {
-        title: 'Do thing one',
-        project: 'General',
-        id: uuidv4(),
-        elapsed: 54000,
-        isRunning: true,
-      },
-      {
-        title: 'Do thing two',
-        project: 'General',
-        id: uuidv4(),
-        elapsed: 64321,
-        isRunning: false,
-      },
-    ]
+    timers: []
   };
 
 
@@ -39,8 +24,16 @@ export default class App extends React.Component {
 
       this.setState({
         timers: timers.map(timer => {
-          const { elapsed, isRunning } = timer;
+          const { elapsed, isRunning, timeLimit } = timer;
 
+          if(timeLimit != 0 && elapsed === (timeLimit*1000)){     // multiply by 1000 to convert s to ms
+            this.timeLimitAlert(timer);
+            return{
+              ...timer,
+              isRunning: false,
+              elapsed: elapsed + 1,
+          }
+          }
           return {
             ...timer,
             elapsed: isRunning ? elapsed + TIME_STEP : elapsed,
@@ -67,16 +60,15 @@ export default class App extends React.Component {
   handleFormSubmit = attrs => {
 
     const { timers } = this.state;
-
     this.setState({
       timers: timers.map(timer => {
         if(timer.id === attrs.id){
-          const { title, project } = attrs;
-
+          const { title, project, timeLimit } = attrs;
           return {
             ...timer,
             title,
             project,
+            timeLimit,
           };
         }
 
@@ -113,6 +105,46 @@ export default class App extends React.Component {
     })
   };
 
+  timeLimitAlert = (timer) => {
+
+    const ONE_SECOND_IN_MS = 1000;
+
+    const PATTERN = [
+      1 * ONE_SECOND_IN_MS,
+      2 * ONE_SECOND_IN_MS,
+      3 * ONE_SECOND_IN_MS
+    ];
+    this.startVibrationAlert(PATTERN, true);
+    Alert.alert(
+      "Time Limit",
+      `Time Limit of timer: ${timer.title} has been surpassed!`,
+      [
+        {
+          text: "Cancel Task",
+          onPress: () => this.cancelTask(timer), // Eliminate task X
+          style: "cancel"
+        },
+        { text: "Ok", onPress: () =>  this.stopVibrationAlert()} // Continue
+      ],
+      { cancelable: false }
+    );
+  }
+
+  cancelTask = (timer) => {
+      this.stopVibrationAlert();
+      this.setState({
+        timers: this.state.timers.filter(time => time.id !== timer.id)
+      });
+
+  }
+
+  startVibrationAlert = (duration) => {
+    Vibration.vibrate(duration, true);
+  };
+
+  stopVibrationAlert = () => {
+    Vibration.cancel();
+  };
 
   render (){
     const { timers } = this.state;
@@ -124,9 +156,9 @@ export default class App extends React.Component {
         <KeyboardAvoidingView behavior="padding" style={styles.timerListContainer}>
         <ScrollView style={styles.timerList}>
           <ToggleableTimerForm onFormSubmit={this.handleCreateFormSubmit}/>
-          {timers.map(({ title, project, id, elapsed, isRunning}) => (
+          {timers.map(({ title, project, timeLimit, id, elapsed, isRunning}) => (
             <EditableTimer
-            key={id} id={id} title={title} project={project} elapsed={elapsed} isRunning={isRunning} onFormSubmit={this.handleFormSubmit} onRemovePress={this.handleRemoveTimer} onStartPress={this.handleTimeChange} onStopPress={this.handleTimeChange}/>
+            key={id} id={id} title={title} project={project} timeLimit={timeLimit} elapsed={elapsed} isRunning={isRunning} onFormSubmit={this.handleFormSubmit} onRemovePress={this.handleRemoveTimer} onStartPress={this.handleTimeChange} onStopPress={this.handleTimeChange}/>
           ))}
         </ScrollView>
         </KeyboardAvoidingView>

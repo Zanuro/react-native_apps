@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, View, Text, TextInput, TouchableOpacity, ColorPropType } from 'react-native';
 import Timer from './Timer';
-
+import PropTypes from 'prop-types';
 
 export default function TimerButton({ color, title, small, onPress}){
 

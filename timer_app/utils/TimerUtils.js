@@ -19,6 +19,7 @@ export const newTimer = (attrs = {}) =>  {
     const timer = {
         title: attrs.title || 'Timer',
         project: attrs.project || 'Project',
+        timeLimit: attrs.timeLimit || null,
         id: uuidv4(),
         elapsed: 0,
         isRunning: false,

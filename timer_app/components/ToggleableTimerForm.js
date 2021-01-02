@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, Text } from 'react-native';
-
+import PropTypes from 'prop-types';
 import TimerForm from './TimerForm';
 import TimerButton from './TimerButton';
 

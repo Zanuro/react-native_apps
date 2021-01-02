@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, Text, TextInput, TouchableHighlightBase } from 'react-native';
-
+import PropTypes from 'prop-types';
 import TimerButton from './TimerButton';
 
 export default class TimerForm extends React.Component{
@@ -9,6 +9,7 @@ export default class TimerForm extends React.Component{
         id: PropTypes.string,
         title: PropTypes.string,
         project: PropTypes.string,
+        timeLimit: PropTypes.number,
         onFormSubmit: PropTypes.func.isRequired,
         onFormClose: PropTypes.func.isRequired,
     };
@@ -17,16 +18,18 @@ export default class TimerForm extends React.Component{
         id: null,
         title: '',
         project: '',
+        timeLimit: null,
     };
 
     constructor(props){
         super(props);
 
-        const { id, title, project } = props;
+        const { id, title, project, timeLimit } = props;
 
         this.state = {
             title: id ? title : '',
             project: id ? project : '',
+            timeLimit: id ? timeLimit : null,
         };
     }
 
@@ -38,20 +41,27 @@ export default class TimerForm extends React.Component{
         this.setState({ project: project});
     }
 
+    handleChangeTimeLimit = (timeLimit) => {
+        var integer = parseInt(timeLimit, 10);
+        this.setState({ timeLimit: integer});
+    }
+
+
     handleSubmit = () =>{
-        const { title, project } = this.state;
+        const { title, project, timeLimit } = this.state;
         const { id, onFormSubmit } = this.props;
 
         onFormSubmit({
             id,
             title,
-            project
+            project,
+            timeLimit,
         });
     };
 
     render (){
         const { id, onFormClose } = this.props;
-        const { title, project } = this.state;
+        const { title, project, timeLimit } = this.state;
         const  submitText =  id ? 'Update' : 'Create';
         return (
             <View style={styles.formContainer}>
@@ -68,6 +78,14 @@ export default class TimerForm extends React.Component{
                 <View style={styles.textInputContainer}>
                     <TextInput style={styles.textInput} underlineColorAndroid="transparent"
                     value={project} onChangeText={this.handleChangeProject}/>           
+                </View>
+                </View>
+
+                <View style={styles.attributeContainer}>
+                    <Text style={styles.textInputTitle}>Time Limit(s)</Text>
+                <View style={styles.textInputContainer}>
+                    <TextInput style={styles.textInput} underlineColorAndroid="transparent"
+                    value={timeLimit} onChangeText={this.handleChangeTimeLimit} maxLength={4} keyboardType='numeric'/>           
                 </View>
                 </View>
                 <View style={styles.buttonGroup}>
