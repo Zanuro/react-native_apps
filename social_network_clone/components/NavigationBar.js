@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     title: {
-        fontSize: 10,
+        fontSize: 20,
         fontWeight: '500'
     },
     leftText:{

@@ -26,7 +26,7 @@ export default class CommentInput extends React.Component{
         const { commentText } = this.state;
 
 
-        if(commentText === '')
+        if(!commentText)
             return;
         
         onSubmit(commentText);

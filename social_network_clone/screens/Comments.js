@@ -2,7 +2,6 @@ import {SafeAreaView, View, ViewPropTypes } from 'react-native';
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import NavigationBar from '../components/NavigationBar';
 
 import NavigationBar from '../components/NavigationBar';
 import CommentList from '../components/CommentList';
