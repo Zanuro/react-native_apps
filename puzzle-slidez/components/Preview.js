@@ -26,7 +26,7 @@ export default function Preview({ image, boardSize }){
 }
 
 Preview.propTypes = {
-    image:Image.propTypes.source,
+    //image:Image.propTypes.source,
     boardSize: PropTypes.number.isRequired,
 };
 

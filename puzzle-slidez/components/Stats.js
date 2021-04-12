@@ -25,7 +25,7 @@ Stats.propTypes = {
     moves: PropTypes.number.isRequired
 };
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
       },

@@ -37,7 +37,7 @@ export default class App extends React.Component{
 
         Image.prefetch(image.uri);
 
-        this.setState({image: image});
+        this.setState({image});
     };
 
     handleChangeSize = size => {

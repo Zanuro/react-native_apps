@@ -34,17 +34,6 @@ export default class Start extends React.Component{
     toggleOpacity = new Animated.Value(0);
     buttonOpacity = new Animated.Value(0);
 
-    handlePressStart = async () => {
-        const { onStartGame } = this.props;
-
-        await configureTransition( () => {
-            this.setState({
-                transitionState: State.WillTransitionOut
-            });
-        })
-        onStartGame();
-    }
-
     async componentDidMount(){
 
         await sleep(500);
@@ -66,6 +55,17 @@ export default class Start extends React.Component{
             delay: 1000,
             useNativeDriver: true,
         }).start();
+    }
+
+    handlePressStart = async () => {
+        const { onStartGame } = this.props;
+        
+        await configureTransition( () => {
+            this.setState({
+                transitionState: State.WillTransitionOut
+            });
+        })
+        onStartGame();
     }
 
     render(){
