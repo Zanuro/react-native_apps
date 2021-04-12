@@ -94,7 +94,7 @@ export default class Game extends React.Component{
         clearInterval(this.intervalId);
 
         this.setState({
-            transitionState: State.requestTransitionOut 
+            transitionState: State.RequestTransitionOut 
         });
     }
 

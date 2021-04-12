@@ -47,16 +47,38 @@ export default class Board extends React.PureComponent{
         this.state = { transitionState: State.WillTransitionIn };
         this.animatedValues = [];
 
+        const height = Dimensions.get('window').height;
+
         board.forEach((square, ix) => {
             const { top, left } = calculateItemPosition(size, ix);
 
             this.animatedValues[square] = {
                 scale: new Animated.Value(1),
-                top: new Animated.Value(top),
+                top: new Animated.Value(top + height),
                 left: new Animated.Value(left),
             }
         })
 
+    }
+
+    animateAllSquares(visible){
+        const { puzzle: {board, size } } = this.props;
+
+        const height = Dimensions.get('window').height;
+
+        const animations = board.map((square,ix) => {
+            const { top } = calculateItemPosition(size, ix);
+
+            return Animated.timing(this.animatedValues[square].top, {
+                toValue: visible ? top : top + height,
+                delay: 800 * (ix / board.length),
+                duration: 400,
+                easing: visible ? Easing.out(Easing.ease) : Easing.in(Easing.ease),
+                useNativeDriver: true,
+            })
+        })
+
+        return new Promise( res => Animated.parallel(animations).start(res));
     }
 
     renderSquare = (square, ix) => {
@@ -211,18 +233,31 @@ export default class Board extends React.PureComponent{
         const {previousMove, onTransitionOut, puzzle, teardown} = nextProps;
 
         const didMovePiece = this.props.puzzle !== puzzle && previousMove !== null;
+        const shouldTeardown = !this.props.teardown && teardown;
 
         if(didMovePiece){
             await this.updateSquarePosition(
                 puzzle, previousMove, getIndex(puzzle, previousMove)
             );
         }
+
+        if(shouldTeardown){
+            await this.animateAllSquares(false);
+
+            this.setState({
+                transitionState: State.DidTransitionOut
+            })
+            onTransitionOut();
+        }
     }
 
 
-    componentDidMount(){
-        const { onTransitionIn } = this.props;
+    async componentDidMount(){
 
+        // show squares animation
+        await this.animateAllSquares(true);
+
+        const { onTransitionIn } = this.props;
 
         this.setState({
             transitionState: State.DidTransitionIn
